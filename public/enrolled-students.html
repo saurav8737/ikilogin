@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrolled Students - Impact Knowledge Institute</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Impact Knowledge Institute</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin-dashboard.html">Admin Dashboard</a></li>
+                <li><a href="/enroll-student.html">Enroll Student</a></li>
+                <li><a href="/enrolled-students.html">View Enrolled Students</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Enrolled Students</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Admission No.</th>
+                    <th>Photo</th>
+                    <th>Full Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="student-list">
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        <p>&copy; 2024 Impact Knowledge Institute. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/students')
+                .then(response => response.json())
+                .then(data => {
+                    const studentList = document.getElementById('student-list');
+                    data.forEach(student => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${student.admissionNo}</td>
+                            <td>${student.photo ? `<img src="/uploads/${student.photo}" alt="Student Photo" width="50">` : 'N/A'}</td>
+                            <td>${student.firstName} ${student.lastName}</td>
+                            <td>
+                                <button onclick="viewDetails(${student.id})">View Details</button>
+                            </td>
+                        `;
+                        studentList.appendChild(row);
+                    });
+                });
+        });
+
+        function viewDetails(id) {
+            // Redirect to a detailed view page for the student
+            window.location.href = `/student-details.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>

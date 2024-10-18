@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details - Impact Knowledge Institute</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header, footer {
+            width: 100%;
+            background-color: #003366;
+            text-align: center;
+            padding: 10px;
+        }
+        main {
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px 0;
+        }
+        .student-container {
+            display: flex;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+        }
+        .student-details {
+            flex: 1;
+        }
+        .student-photo {
+            margin-left: 20px;
+            max-width: 200px;
+            max-height: 300px;
+        }
+        .student-details h2 {
+            margin-top: 0;
+        }
+        .student-details p {
+            margin: 5px 0;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+        .edit-button {
+            background-color: #28a745;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .print-button {
+            background-color: #007bff;
+        }
+        .edit-button:hover {
+            background-color: #218838;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+        .print-button:hover {
+            background-color: #0056b3;
+        }
+        .back-button {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Impact Knowledge Institute</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin-dashboard.html">Admin Dashboard</a></li>
+                <li><a href="/enroll-student.html">Enroll Student</a></li>
+                <li><a href="/enrolled-students.html">View Enrolled Students</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="student-container">
+            <div class="student-details">
+                <h2>Student Details</h2>
+                <p><strong>First Name:</strong> <span id="firstName"></span></p>
+                <p><strong>Last Name:</strong> <span id="lastName"></span></p>
+                <p><strong>Date of Birth:</strong> <span id="dob"></span></p>
+                <p><strong>Gender:</strong> <span id="gender"></span></p>
+                <p><strong>Father's Name:</strong> <span id="fatherName"></span></p>
+                <p><strong>Mother's Name:</strong> <span id="motherName"></span></p>
+                <p><strong>School Name:</strong> <span id="schoolName"></span></p>
+                <p><strong>Tuition Fee:</strong> <span id="tuitionFee"></span></p>
+                <p><strong>Mobile No:</strong> <span id="mobileNo"></span></p>
+                <p><strong>Admission Date:</strong> <span id="admissionDate"></span></p>
+                <p><strong>Class:</strong> <span id="currentClass"></span></p>
+                <p><strong>Address:</strong> <span id="address"></span></p>
+                <p><strong>Area Pin Code:</strong> <span id="areaPinCode"></span></p>
+                <p><strong>City:</strong> <span id="city"></span></p>
+                <p><strong>State:</strong> <span id="state"></span></p>
+                <div class="buttons">
+                    <button class="button edit-button" onclick="editStudent()">Edit</button>
+                    <button class="button delete-button" onclick="deleteStudent()">Delete</button>
+                    <button class="button print-button" onclick="printDetails()">Print</button>
+                </div>
+            </div>
+            <img id="studentPhoto" class="student-photo" src="" alt="Student Photo">
+        </div>
+        <a href="/enrolled-students.html" class="back-button">Back to List</a>
+    </main>
+    <footer>
+        <p>&copy; 2024 Impact Knowledge Institute. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            
+            fetch(`/api/students`)
+                .then(response => response.json())
+                .then(data => {
+                    const student = data.find(s => s.id === parseInt(id));
+                    if (student) {
+                        document.getElementById('firstName').textContent = student.firstName;
+                        document.getElementById('lastName').textContent = student.lastName;
+                        document.getElementById('dob').textContent = student.dob;
+                        document.getElementById('gender').textContent = student.gender;
+                        document.getElementById('fatherName').textContent = student.fatherName;
+                        document.getElementById('motherName').textContent = student.motherName;
+                        document.getElementById('schoolName').textContent = student.schoolName;
+                        document.getElementById('tuitionFee').textContent = student.tuitionFee;
+                        document.getElementById('mobileNo').textContent = student.mobileNo;
+                        document.getElementById('admissionDate').textContent = student.admissionDate;
+                        document.getElementById('currentClass').textContent = student.currentClass;
+                        document.getElementById('address').textContent = student.address;
+                        document.getElementById('areaPinCode').textContent = student.areaPinCode;
+                        document.getElementById('city').textContent = student.city;
+                        document.getElementById('state').textContent = student.state;
+                        if (student.photo) {
+                            document.getElementById('studentPhoto').src = `/uploads/${student.photo}`;
+                        } else {
+                            document.getElementById('studentPhoto').alt = 'No photo available';
+                        }
+                    } else {
+                        document.querySelector('main').innerHTML = '<p>Error loading student details.</p>';
+                    }
+                });
+        });
+
+        function editStudent() {
+            const id = new URLSearchParams(window.location.search).get('id');
+            window.location.href = `/edit-student.html?id=${id}`;
+        }
+
+        function deleteStudent() {
+            const id = new URLSearchParams(window.location.search).get('id');
+            fetch(`/delete-student/${id}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Student deleted successfully');
+                        window.location.href = '/enrolled-students.html';
+                    } else {
+                        alert('Failed to delete student');
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+        }
+
+        function printDetails() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

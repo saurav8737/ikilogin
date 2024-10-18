@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1723667549436,
+    "firstName": "Saurav",
+    "lastName": "Kumar",
+    "dob": "2024-08-15",
+    "gender": "male",
+    "facultyOf": "Mathematics",
+    "fatherName": "Ravish Yadav",
+    "motherName": "Kaushalya Devi",
+    "mobileNo": "09570065413",
+    "joiningDate": "2024-08-15",
+    "address": "Nippo Building, Free Press Lane Path, Salimpurahra, Patna3",
+    "city": "",
+    "photo": "photo-1723667549391.jpg"
+  },
+  {
+    "id": 1723667978010,
+    "firstName": "Aradhya",
+    "lastName": "Singh",
+    "dob": "2004-08-06",
+    "gender": "female",
+    "facultyOf": "Economics",
+    "fatherName": "Rakesh Kumar Singh",
+    "motherName": "Rubi Kumari",
+    "mobileNo": "9263406256",
+    "joiningDate": "2024-08-15",
+    "address": "Tarapur",
+    "city": "",
+    "photo": "photo-1723667977975.jpg"
+  }
+]

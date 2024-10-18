@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Salary Slip - Impact Knowledge Institute</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .salary-slip-container {
+            border: 2px solid #000; /* Black border around the whole salary slip */
+            padding: 20px;
+            width: 80%;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .salary-slip-header, .salary-slip-body, .salary-slip-footer {
+            border-bottom: 2px solid #000;
+            padding: 10px 0;
+        }
+        .salary-slip-body {
+            display: flex;
+            justify-content: space-between;
+        }
+        .salary-slip-details, .salary-slip-image {
+            width: 48%;
+        }
+        .salary-slip-image img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #000;
+            border-radius: 5px;
+        }
+        .salary-slip-footer {
+            border-bottom: none;
+            text-align: center;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Impact Knowledge Institute</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin-dashboard.html">Dashboard</a></li>
+                <li><a href="/admin-login.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Generate Salary Slip</h2>
+        <form action="/generate-salary-slip" method="POST">
+            <label for="faculty">Select Faculty:</label>
+            <select name="facultyId" id="faculty" required>
+                <option value="">Select a faculty</option>
+                <!-- Options will be populated by JavaScript -->
+            </select><br><br>
+            <label for="salary">Salary Amount:</label>
+            <input type="number" name="salary" id="salary" required><br><br>
+            <label for="paymentDate">Payment Date:</label>
+            <input type="date" name="paymentDate" id="paymentDate" required><br><br>
+            <button type="submit">Generate Salary Slip</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2024 Impact Knowledge Institute. All rights reserved.</p>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/faculties')
+                .then(response => response.json())
+                .then(data => {
+                    const facultySelect = document.getElementById('faculty');
+                    console.log('Fetched faculties:', data); // Debug: Log fetched faculties
+                    data.forEach(faculty => {
+                        const option = document.createElement('option');
+                        option.value = faculty.id;
+                        option.textContent = `${faculty.firstName} ${faculty.lastName}`;
+                        facultySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching faculties:', error));
+        });
+    </script>
+</body>
+</html>

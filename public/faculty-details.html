@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Details - Impact Knowledge Institute</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header, footer {
+            width: 100%;
+            background-color: #003366;
+            text-align: center;
+            padding: 10px;
+        }
+        main {
+            width: 80%;
+            max-width: 1200px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+        .details-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .details-content {
+            flex: 1 1 60%;
+            max-width: 600px;
+        }
+        .details-content h2 {
+            text-align: center;
+        }
+        .details-content p {
+            margin: 10px 0;
+        }
+        .faculty-photo {
+            flex: 1 1 30%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .faculty-photo img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        .edit-button {
+            background-color: #007bff;
+        }
+        .edit-button:hover {
+            background-color: #0056b3;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #2dd882;
+        }
+        .print-button {
+            background-color: #28a745;
+        }
+        .print-button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const facultyId = urlParams.get('id');
+
+            if (!facultyId) {
+                alert('No faculty ID provided');
+                window.location.href = '/view-faculties.html';
+                return;
+            }
+
+            fetch(`/api/faculties/${facultyId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(faculty => {
+                    if (!faculty) {
+                        alert('No faculty details found');
+                        return;
+                    }
+                    
+                    const facultyContent = document.getElementById('faculty-content');
+                    const facultyPhoto = document.getElementById('faculty-photo');
+                    
+                    facultyContent.innerHTML = `
+                        <h2>${faculty.firstName} ${faculty.lastName}</h2>
+                        <p><strong>Faculty Of:</strong> ${faculty.facultyOf}</p>
+                        <p><strong>Joining Date:</strong> ${faculty.joiningDate}</p>
+                        <p><strong>Qualifications:</strong> ${faculty.qualifications}</p>
+                        <p><strong>Experience:</strong> ${faculty.experience}</p>
+                        <p><strong>Contact:</strong> ${faculty.contact}</p>
+                        <p><strong>Email:</strong> ${faculty.email}</p>
+                        <p><strong>Address:</strong> ${faculty.address}</p>
+                    `;
+                    facultyPhoto.innerHTML = `
+                        <img src="${faculty.photo ? `/uploads/${faculty.photo}` : '/default-profile.png'}" alt="Faculty Photo">
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error fetching faculty details:', error);
+                    alert('Failed to load faculty details. Please try again later.');
+                });
+        });
+
+        function editFaculty() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const facultyId = urlParams.get('id');
+            if (facultyId) {
+                window.location.href = `/edit-faculty.html?id=${facultyId}`;
+            }
+        }
+
+        function deleteFaculty() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const facultyId = urlParams.get('id');
+            if (facultyId) {
+                fetch(`/delete-faculty/${facultyId}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.message === 'Faculty deleted successfully') {
+                            alert('Faculty deleted successfully');
+                            window.location.href = '/view-faculties.html';
+                        } else {
+                            alert('Error deleting faculty');
+                        }
+                    })
+                    .catch(error => console.error('Error deleting faculty:', error));
+            }
+        }
+
+        function printProfile() {
+            window.print();
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Impact Knowledge Institute</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/admin-dashboard.html">Admin Dashboard</a></li>
+                <li><a href="/enroll-student.html">Enroll Student</a></li>
+                <li><a href="/enrolled-students.html">View Enrolled Students</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="details-container">
+            <div id="faculty-content" class="details-content">
+                <!-- Faculty details will be injected here -->
+            </div>
+            <div id="faculty-photo" class="faculty-photo">
+                <!-- Faculty photo will be injected here -->
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="edit-button" onclick="editFaculty()">Edit</button>
+            <button class="delete-button" onclick="deleteFaculty()">Delete</button>
+            <button class="print-button" onclick="printProfile()">Print</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Impact Knowledge Institute. All rights reserved.</p>
+        <p>Designed by: SAURAV KUMAR</p>
+    </footer>
+</body>
+</html>
